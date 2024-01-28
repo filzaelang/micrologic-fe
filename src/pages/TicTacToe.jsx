@@ -1,77 +1,61 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "../components/Navbar";
 import "../css/TicTacToe.css"
 
+const Square = ({ value, onSquareClick }) => {
+    const squareClassName = value === 'X' ? 'x' : (value === 'O' ? 'o' : '');
+
+    return (
+        <button className={`square ${squareClassName}`} onClick={onSquareClick}>
+            {value}
+        </button>
+    );
+};
+
 const TicTacToe = () => {
-    const [board, setBoard] = useState(Array(9).fill(null));
-    const [isXNext, setIsXNext] = useState(true);
-    const winner = calculateWinner(board);
+    const [squares, setSquares] = useState(Array(9).fill(null));
+    const [xIsNext, setXIsNext] = useState(true);
 
-    const handleClick = (index) => {
-        if (board[index] || winner) return;
+    const handleClick = (i) => {
+        if (squares[i] || calculateWinner(squares)) return;
+        const nextSquares = squares.slice();
+        nextSquares[i] = xIsNext ? 'X' : 'O';
 
-        const newBoard = board.slice();
-        newBoard[index] = isXNext ? 'X' : 'O';
-        setBoard(newBoard);
-        setIsXNext(!isXNext);
-    };
+        setSquares(nextSquares);
+        setXIsNext(!xIsNext);
+    }
 
-    const renderSquare = (index) => {
-        const squareValue = board[index];
-        const squareClass = `square ${squareValue ? `player-${squareValue.toLowerCase()}` : ''}`;
-
-        return (
-            <div
-                className={squareClass}
-                onClick={() => handleClick(index)}
-            >
-                {squareValue}
-            </div>
-        );
-    };
-
-    const getStatus = () => {
-        if (winner) {
-            return `Winner: ${winner}`;
-        } else {
-            return `Next player: ${isXNext ? 'X' : 'O'}`;
-        }
-    };
-
-    const resetGame = () => {
-        setBoard(Array(9).fill(null));
-        setIsXNext(true);
-    };
+    const winner = calculateWinner(squares);
+    let status = '';
+    if (winner) {
+        status = 'Winner: ' + winner;
+    } else {
+        status = 'Next player: ' + (xIsNext ? 'X' : 'O')
+    }
 
     return (
         <Container>
             <Navbar />
-            <Row className="justify-content-center mt-5">
-                <Col xs={12} sm={8} md={6}>
-                    <div className="status">{getStatus()}</div>
-                    <div className="board">
-                        {[0, 1, 2].map((row) => (
-                            <Row key={row} className="board-row">
-                                {[0, 1, 2].map((col) => (
-                                    <Col key={col}>
-                                        {renderSquare(row * 3 + col)}
-                                    </Col>
-                                ))}
-                            </Row>
-                        ))}
-                    </div>
-                    <div className="mt-3">
-                        <Button onClick={resetGame} variant="primary">Reset Game</Button>
-                    </div>
-                </Col>
-            </Row>
+            <div className="status">{status}</div>
+            <div className="board">
+                <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+                <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+                <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+                <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+                <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+                <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+                <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+                <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+                <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+            </div>
         </Container>
     );
 };
 
-// Helper function to determine the winner
+export default TicTacToe;
+
 const calculateWinner = (squares) => {
     const lines = [
         [0, 1, 2],
@@ -81,17 +65,16 @@ const calculateWinner = (squares) => {
         [1, 4, 7],
         [2, 5, 8],
         [0, 4, 8],
-        [2, 4, 6],
+        [2, 4, 6]
     ];
 
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
+
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
             return squares[a];
         }
     }
 
-    return null;
-};
-
-export default TicTacToe;
+    return false;
+}

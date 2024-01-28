@@ -5,13 +5,18 @@
     margin-bottom: 5px;
 }
 
+.board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 240px;
+    height: 240px;
+    margin: auto;
+}
+
 .square {
     width: 80px;
     height: 80px;
     border: 2px solid #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 24px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -21,18 +26,21 @@
     background-color: #f0f0f0;
 }
 
-.player-x {
+.x {
     color: #2196f3;
     /* Warna untuk pemain X */
 }
 
-.player-o {
+.o {
     color: #f44336;
     /* Warna untuk pemain O */
 }
 
 .status {
     font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 15px;
 }
 
